@@ -1,0 +1,112 @@
+{
+  "kind": "build_request",
+  "title": "Apply a global high-contrast theme and fix unreadable/transparent text across the app",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Implement a single, coherent, high-contrast visual theme across the entire app (light mode) so all text, buttons, menus, dropdowns, sheets, popovers, inputs, and helper/placeholder text are always clearly readable. Choose the theme direction autonomously (user requested you pick), but avoid low-contrast/transparent/outlined text and avoid blue/purple-heavy gradients.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "There is a lot of transparent or white letters that are not seen. Can you make sure that everything is visible and not hard to read. Text, Menus, dropdowns menus, etc. how about we just change the color scheme",
+          "You do what’s best theme wise"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All screens use a consistent palette (backgrounds, surfaces/cards, borders, primary/accent, text colors) without mixing incompatible schemes.",
+        "No UI relies on transparent/outlined text for readability (e.g., text must not disappear on gradients or light backgrounds).",
+        "All standard text meets WCAG AA contrast (minimum 4.5:1 for normal text; 3:1 for large text) against its background."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Update the global CSS theme tokens in frontend/src/index.css (the :root and .dark CSS variables used by Tailwind/shadcn) to match the new high-contrast theme, and remove/replace any global utility styles that force unreadable colors (e.g., utilities like .text-on-gradient that enforce white text) so they cannot cause invisible text on the chosen background scheme.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "make sure that everything is visible and not hard to read. Text, Menus, dropdowns menus, etc."
+        ]
+      },
+      "acceptanceCriteria": [
+        "The default body text color and default surfaces (bg-background, text-foreground, card, popover) render with strong contrast.",
+        "All shadcn components (Buttons, Cards, Sheets, Popovers, Inputs, Select/Dropdown patterns) inherit readable colors from the updated tokens without requiring per-component hacks.",
+        "No global utility class forces white/transparent text in a way that reduces readability."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Refactor the Landing page (frontend/src/pages/LandingPage.tsx) to match the new theme by removing the current blue-to-purple gradient hero background and ensuring the hero paragraph and all other landing text render in high-contrast colors (solid, readable text) across the entire page.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "There is a lot of transparent or white letters that are not seen."
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Landing page no longer uses the existing blue/purple gradient background and does not require white text for readability.",
+        "The main description paragraph (“Faith Unplugged is a 30-day devotional journey...”) is clearly readable on all screen sizes.",
+        "Buttons/links on the Landing page (including outline buttons) have readable text, visible borders, and clear hover/focus states."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Audit and fix readability in navigation and overlay UI, including the header navigation buttons and the mobile sheet menu (frontend/src/components/Header.tsx), ensuring all labels/icons remain readable in all states (default/hover/active/disabled) and inside overlays (SheetContent).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Text, Menus, dropdowns menus, etc."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Header text and icons are readable against the header background on all pages.",
+        "Mobile menu sheet content has readable text/icons and sufficient contrast for all menu items and the login/logout button.",
+        "Focus rings are clearly visible and do not blend into surrounding backgrounds."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Ensure every page and common interactive pattern in the app uses the new readable theme without regressions, including: Home, Devotion, Journal, Bible (search/results/list items), Fasting, My Journey, Ministry, and Settings. Fix any remaining instances of low-contrast text (including muted/placeholder text, badges, tab labels, and any dropdown/select content) by updating class usage to rely on theme tokens (text-foreground, text-muted-foreground, bg-card, bg-popover, etc.) rather than hard-coded white/transparent styles.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Can you make sure that everything is visible and not hard to read."
+        ]
+      },
+      "acceptanceCriteria": [
+        "No page contains text that becomes invisible or difficult to read due to background color, transparency, or gradients.",
+        "Dropdown/select/popover-style content renders readable text and visible separators/borders (including in overlay layers).",
+        "All primary and secondary actions have clearly readable labels and sufficient contrast in all states."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not edit any files under frontend/src/components/ui (shadcn UI components must be composed/used, not modified).",
+    "Do not edit any paths listed under frontend.immutablePaths in SYSTEM_CONTEXT.",
+    "Frontend changes must stay within React + TypeScript + Tailwind + React Query conventions already used in the codebase."
+  ],
+  "nonGoals": [
+    "Do not add new product features beyond theming/readability changes.",
+    "Do not change authentication behavior or backend APIs as part of this request.",
+    "Do not implement new dark-mode UX unless required to prevent unreadable text (the goal is readability and a consistent theme)."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

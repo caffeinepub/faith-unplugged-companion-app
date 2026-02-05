@@ -1,0 +1,147 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "High-contrast light theme and app-wide readability fixes",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Apply a single high-contrast light theme across the app so all typography and interactive UI remains readable in all states.",
+      "acceptanceCriteria": [
+        "All screens use a consistent palette (backgrounds, surfaces/cards, borders, primary/accent, text colors) without mixing incompatible schemes.",
+        "No UI relies on transparent/outlined text for readability (e.g., text must not disappear on gradients or light backgrounds).",
+        "All standard text meets WCAG AA contrast (minimum 4.5:1 for normal text; 3:1 for large text) against its background."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Adjust the global light-mode theme CSS variables to a cohesive, high-contrast palette (background/surfaces/borders/text/primary/accent/muted/ring) designed for consistent readability across shadcn/Tailwind tokens."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Review and adjust any Tailwind theme extensions (colors/shadows/animations) as needed to align with the updated CSS token palette and ensure token-based colors (bg-background, text-foreground, bg-card, bg-popover, text-muted-foreground, ring) are the default choices across the app."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Ensure the app root/layout surfaces consistently use theme tokens (bg-background, text-foreground) and do not introduce page-level styling that could cause low-contrast text or transparent overlays."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Update global theme tokens in index.css and remove/replace global utility styles that can force unreadable colors.",
+      "acceptanceCriteria": [
+        "The default body text color and default surfaces (bg-background, text-foreground, card, popover) render with strong contrast.",
+        "All shadcn components (Buttons, Cards, Sheets, Popovers, Inputs, Select/Dropdown patterns) inherit readable colors from the updated tokens without requiring per-component hacks.",
+        "No global utility class forces white/transparent text in a way that reduces readability."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Update :root and .dark CSS variables to match the new high-contrast theme (with a readable light-mode default), and remove or replace the .text-on-gradient utility so it cannot force white text (or other low-contrast text) on non-dark backgrounds."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Refactor the Landing page to remove the blue-to-purple gradient hero and ensure all landing content uses solid, high-contrast text on readable surfaces.",
+      "acceptanceCriteria": [
+        "The Landing page no longer uses the existing blue/purple gradient background and does not require white text for readability.",
+        "The main description paragraph (“Faith Unplugged is a 30-day devotional journey...”) is clearly readable on all screen sizes.",
+        "Buttons/links on the Landing page (including outline buttons) have readable text, visible borders, and clear hover/focus states."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/LandingPage.tsx",
+          "operation": "modify",
+          "description": "Remove the current gradient hero background layers and refactor the hero/sections to use theme token-based backgrounds and surfaces (bg-background/bg-card) with solid readable text (text-foreground/text-muted-foreground). Replace any .text-on-gradient usage and ensure buttons (default/outline) have visible borders and readable labels in all states."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "If Landing previously depended on global gradient-text utilities, ensure any removed/replaced utilities do not break Landing styles and that Landing now relies on theme tokens for color."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Fix readability in header navigation and the mobile sheet menu so labels/icons and focus rings remain clear in all states and overlay contexts.",
+      "acceptanceCriteria": [
+        "Header text and icons are readable against the header background on all pages.",
+        "Mobile menu sheet content has readable text/icons and sufficient contrast for all menu items and the login/logout button.",
+        "Focus rings are clearly visible and do not blend into surrounding backgrounds."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Header.tsx",
+          "operation": "modify",
+          "description": "Audit and update header/nav button styling to rely on theme tokens (text-foreground, bg-background, bg-popover, border-border, ring) and ensure icon/text contrast for default/hover/active/disabled states. Update mobile SheetContent navigation button classes so overlay content remains readable and separators/borders are visible without hard-coded low-contrast colors."
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Adjust global focus-visible styling if needed (outline/ring color/offset) so focus rings are consistently visible across header buttons, sheet menu items, and other overlay UI."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Audit and fix remaining low-contrast text across all pages and common interactive patterns (including overlay content, placeholders, badges, tabs, and dropdown/popover content) to rely on theme tokens.",
+      "acceptanceCriteria": [
+        "No page contains text that becomes invisible or difficult to read due to background color, transparency, or gradients.",
+        "Dropdown/select/popover-style content renders readable text and visible separators/borders (including in overlay layers).",
+        "All primary and secondary actions have clearly readable labels and sufficient contrast in all states."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/HomePage.tsx",
+          "operation": "modify",
+          "description": "Audit and update any remaining hard-coded or semi-transparent styling that could reduce contrast; ensure buttons/cards/text use theme tokens (text-foreground, text-muted-foreground, bg-card, border-border) and maintain readable outline button borders and hover/focus states."
+        },
+        {
+          "path": "frontend/src/pages/DevotionPage.tsx",
+          "operation": "modify",
+          "description": "Replace decorative gradients and low-contrast background treatments (e.g., header gradients) with token-based solid surfaces (bg-card/bg-muted) where needed; ensure badges, separators, and all text (including italic/scripture blocks) stay readable and rely on theme tokens rather than hard-coded translucency."
+        },
+        {
+          "path": "frontend/src/pages/JournalPage.tsx",
+          "operation": "modify",
+          "description": "Ensure empty states, cards, excerpts, and badges maintain high contrast (including muted text) and avoid overly transparent muted-foreground usage that could fail contrast on light surfaces."
+        },
+        {
+          "path": "frontend/src/pages/BiblePage.tsx",
+          "operation": "modify",
+          "description": "Remove/replace any gradient-based button backgrounds and ensure Tabs/Triggers, badges (outline/secondary), dialog content, inputs/placeholders, and hover-revealed controls use token-based colors for readable text and visible borders in both base UI and overlay (Dialog) layers."
+        },
+        {
+          "path": "frontend/src/pages/FastingPage.tsx",
+          "operation": "modify",
+          "description": "Audit prose blocks, card headers, badges, and status callouts to ensure readable text and borders; replace gradient headers or low-contrast accent backgrounds with token-based surfaces; ensure inputs/placeholders and destructive/success states remain readable without relying on transparency."
+        },
+        {
+          "path": "frontend/src/pages/MyJourneyPage.tsx",
+          "operation": "modify",
+          "description": "Ensure dashboard cards, milestone callouts, and the encouragement section avoid gradient-dependent readability; convert gradient sections to solid token-based surfaces and ensure all muted text remains readable. Remove or adjust the user identity snippet styling if needed to prevent tiny low-contrast text issues."
+        },
+        {
+          "path": "frontend/src/pages/MinistryPage.tsx",
+          "operation": "modify",
+          "description": "Audit cards, headings, and link styling to ensure consistent token-based colors for high contrast (including links on cards) and replace any decorative gradients with solid token-based surfaces if contrast risks remain."
+        },
+        {
+          "path": "frontend/src/pages/SettingsPage.tsx",
+          "operation": "modify",
+          "description": "Ensure labels, descriptions, inputs (including time input), helper text, and alert-like blocks use token-based colors with sufficient contrast; adjust any muted panels/borders that could cause placeholder/helper text to be hard to read."
+        },
+        {
+          "path": "frontend/src/components/Footer.tsx",
+          "operation": "modify",
+          "description": "Ensure footer background/surface and link colors are token-based and maintain readable contrast against the footer surface (including hover/underline states)."
+        }
+      ]
+    }
+  ]
+}

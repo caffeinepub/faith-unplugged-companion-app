@@ -1,0 +1,112 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-05T01:04:27.879Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 5,
+    "implemented": 5,
+    "items": [
+      {
+        "id": "REQ-1",
+        "summary": "Implement a single, coherent, high-contrast visual theme across the entire app (light mode) so all text, buttons, menus, dropdowns, sheets, popovers, inputs, and helper/placeholder text are always clearly readable. Choose the theme direction autonomously (user requested you pick), but avoid low-contrast/transparent/outlined text and avoid blue/purple-heavy gradients.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/index.css"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Update the global CSS theme tokens in frontend/src/index.css (the :root and .dark CSS variables used by Tailwind/shadcn) to match the new high-contrast theme, and remove/replace any global utility styles that force unreadable colors (e.g., utilities like .text-on-gradient that enforce white text) so they cannot cause invisible text on the chosen background scheme.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/index.css"
+        ],
+        "matchedFiles": [
+          "frontend/src/index.css"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Refactor the Landing page (frontend/src/pages/LandingPage.tsx) to match the new theme by removing the current blue-to-purple gradient hero background and ensuring the hero paragraph and all other landing text render in high-contrast colors (solid, readable text) across the entire page.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/LandingPage.tsx",
+          "frontend/src/index.css"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/LandingPage.tsx",
+          "frontend/src/index.css"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Audit and fix readability in navigation and overlay UI, including the header navigation buttons and the mobile sheet menu (frontend/src/components/Header.tsx), ensuring all labels/icons remain readable in all states (default/hover/active/disabled) and inside overlays (SheetContent).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/Header.tsx",
+          "frontend/src/index.css"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/Header.tsx",
+          "frontend/src/index.css"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Ensure every page and common interactive pattern in the app uses the new readable theme without regressions, including: Home, Devotion, Journal, Bible (search/results/list items), Fasting, My Journey, Ministry, and Settings. Fix any remaining instances of low-contrast text (including muted/placeholder text, badges, tab labels, and any dropdown/select content) by updating class usage to rely on theme tokens (text-foreground, text-muted-foreground, bg-card, bg-popover, etc.) rather than hard-coded white/transparent styles.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/HomePage.tsx",
+          "frontend/src/pages/DevotionPage.tsx",
+          "frontend/src/pages/JournalPage.tsx",
+          "frontend/src/pages/BiblePage.tsx",
+          "frontend/src/pages/FastingPage.tsx",
+          "frontend/src/pages/MyJourneyPage.tsx",
+          "frontend/src/pages/MinistryPage.tsx",
+          "frontend/src/pages/SettingsPage.tsx",
+          "frontend/src/components/Footer.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/DevotionPage.tsx",
+          "frontend/src/pages/FastingPage.tsx",
+          "frontend/src/pages/MyJourneyPage.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "build-template/Dockerfile",
+    "build-template/LICENSE",
+    "build-template/README.md",
+    "build-template/deploy.sh",
+    "build-template/icp.yaml",
+    "build-template/src/backend/canister.yaml",
+    "build-template/src/frontend/canister.yaml",
+    "caffeine.lock.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/components/Header.tsx",
+    "frontend/src/config.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/index.css",
+    "frontend/src/pages/DevotionPage.tsx",
+    "frontend/src/pages/FastingPage.tsx",
+    "frontend/src/pages/LandingPage.tsx",
+    "frontend/src/pages/MyJourneyPage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

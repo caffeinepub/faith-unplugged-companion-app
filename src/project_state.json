@@ -1,0 +1,335 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Faith Unplugged is evolving toward a mobile-first Progressive Web App (iOS/Android installable) that mirrors the Faith Unplugged 30-day devotional book in a locked, non-reordered sequence, providing a calm, distraction-free experience with daily progress, per-day journaling (with optional voice-to-text), reminders, ministry + donation links, a fasting section, and integrated Bible access (KJV-first for public-domain scripture). Recent work focuses heavily on UI readability/accessibility (high-contrast theme), and on enabling per-user private journeys via accounts/profiles rather than shared/local-only state.",
+  "existing_features": [
+    {
+      "id": "IF-1",
+      "title": "Internet Identity authentication (login/logout, persisted delegation)",
+      "synonyms": [
+        "II auth",
+        "AuthClient integration"
+      ],
+      "description": "Provides an InternetIdentityProvider context that initializes an AuthClient, loads any stored delegation on mount, and exposes login/logout (clear) plus detailed loginStatus flags used by the UI for gating pages and showing loading states.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-2",
+      "title": "Backend actor creation with identity switching and query invalidation",
+      "synonyms": [
+        "Actor hook",
+        "DFINITY actor bootstrap"
+      ],
+      "description": "useActor creates an anonymous actor when unauthenticated and an authenticated actor when identity is present. On identity changes it recreates the actor, calls backend initialization for access control, and invalidates/refetches all non-actor React Query caches.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-3",
+      "title": "Secret-based access-control initialization and role management",
+      "synonyms": [
+        "RBAC",
+        "Admin bootstrap"
+      ],
+      "description": "Backend mixin initializes roles on first interaction: the first eligible caller can become admin when providing the correct secret token (matched against CAFFEINE_ADMIN_TOKEN); subsequent callers become users. Includes role queries (getCallerUserRole/isCallerAdmin) and admin-only role assignment.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-4",
+      "title": "30-day devotional content initialization (admin-only)",
+      "synonyms": [
+        "Devotional seeding"
+      ],
+      "description": "Admin-only initializeDevotionalDays seeds 30 devotional day records (title/scripture/action/guidance/reflection) into the canister for later retrieval.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-5",
+      "title": "Devotional day retrieval by day number",
+      "synonyms": [
+        "Daily devotion fetch"
+      ],
+      "description": "Backend getDevotionalDay(day) returns the devotion for a given day (1–30) and frontend useDevotionalDay queries it and displays the sections with styled layout and animations.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-6",
+      "title": "Current day tracking per user",
+      "synonyms": [
+        "Progress day",
+        "Day state"
+      ],
+      "description": "Backend stores currentDay per Principal with getCurrentDay/setCurrentDay (1–30 bounds). Frontend uses useCurrentDay and useSetCurrentDay to drive progress UI and navigation.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-7",
+      "title": "Devotion page navigation and date-based \"Jump to Today\"",
+      "synonyms": [
+        "Day navigation",
+        "Next/previous devotion"
+      ],
+      "description": "DevotionPage supports previous/next day navigation, updates backend current day, and computes a day index from a fixed start date (2026-01-01) for a one-click \"Jump to Today\" action.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-8",
+      "title": "Journal entries (add and list) stored per user",
+      "synonyms": [
+        "Prayer journal",
+        "Daily journal"
+      ],
+      "description": "Backend stores JournalEntry objects keyed by day in a per-user map. Frontend can add/update a day’s entry content and list all entries; the Devotion page auto-loads existing content for the selected day.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-9",
+      "title": "Linked scripture references attached to journal entries",
+      "synonyms": [
+        "Scripture linking"
+      ],
+      "description": "Backend supports addLinkedScripture/removeLinkedScripture to maintain an array of VerseReference objects per journal entry; React Query mutations invalidate the journal entries cache.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-10",
+      "title": "Voice dictation for journal/reflection (Web Speech API)",
+      "synonyms": [
+        "Speech recognition input",
+        "Voice input"
+      ],
+      "description": "DevotionPage and FastingPage integrate browser speech recognition (webkitSpeechRecognition/SpeechRecognition) to append recognized final transcripts into the journal/reflection textareas with start/stop controls and error handling.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-11",
+      "title": "Journal overview page with navigation and export placeholder",
+      "synonyms": [
+        "Journal list",
+        "Export stub"
+      ],
+      "description": "JournalPage lists all journal entries sorted by day, allows click-to-navigate back to a devotion day, and includes an \"Export Journal\" button that currently shows a placeholder toast.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-12",
+      "title": "KJV Bible dataset initialization and read APIs (admin + public queries)",
+      "synonyms": [
+        "Bible seeding",
+        "Bible APIs"
+      ],
+      "description": "Admin-only initializeBibleVerses ingests verses (book/chapter/verse/text). Query endpoints provide getAllBibleVerses, getBibleVerse, and searchBible (substring match).",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-13",
+      "title": "Bible reading UI: browse by testament/book/chapter and keyword search",
+      "synonyms": [
+        "Bible browser",
+        "Bible search UI"
+      ],
+      "description": "BiblePage provides tabs for browsing books/chapters/verses, searching verses by a typed term, and navigating from results to the relevant chapter.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-14",
+      "title": "Verse bookmarking with optional notes",
+      "synonyms": [
+        "Favorite verses",
+        "Bookmarks"
+      ],
+      "description": "Backend supports addVerseBookmark/removeVerseBookmark/getVerseBookmarks stored per user; frontend allows bookmarking/unbookmarking verses via dialogs and displays saved bookmarks with notes.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-15",
+      "title": "Fasting content and fasting session lifecycle",
+      "synonyms": [
+        "Fast tracker",
+        "Fasting sessions"
+      ],
+      "description": "Backend exposes fasting educational content plus endpoints to startNewFast, completeFast, cancelCurrentFast, and query fasting progress/history. Frontend displays description, hourly encouragement, progress UI, and reflection journaling with completion screen.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-16",
+      "title": "My Journey dashboard (progress, stats, milestones, recent items)",
+      "synonyms": [
+        "User dashboard",
+        "Journey overview"
+      ],
+      "description": "MyJourneyPage summarizes devotional progress, counts journal entries and bookmarks, shows recent journal entries and favorite verses, displays milestone cards (week complete, journaler, collector, complete journey), and exposes principal info for reference.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-17",
+      "title": "Ministry information page",
+      "synonyms": [
+        "Temple of Praise page"
+      ],
+      "description": "Backend provides static MinistryInfo (mission/contact/location/support link) and frontend renders it with outbound links and a support CTA.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-18",
+      "title": "Client-side reminder settings with browser notifications",
+      "synonyms": [
+        "Daily reminders settings",
+        "Notification settings"
+      ],
+      "description": "SettingsPage stores reminder enablement and time in localStorage, requests Notification permission when needed, and can send a test notification with a custom icon.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-19",
+      "title": "Admin-only user listing and per-user day lookup",
+      "synonyms": [
+        "Admin user management"
+      ],
+      "description": "Backend includes listAllUsers (admin-only) and getUserDay (self or admin) to inspect user progress by Principal.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "IF-20",
+      "title": "Caffeine blob storage management mixin",
+      "synonyms": [
+        "Storage gateway auth",
+        "Dead blob pruning"
+      ],
+      "description": "Separate Motoko modules implement an authorized principal registry fetched from a cashier canister, APIs to list dead blobs and confirm deletion (with forced GC), a cashier refill/top-up mechanism using cycles, and an upload certificate stub.",
+      "reqIds": [],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-single-coherent-high-contrast-visual-theme-across-the-entire-app-light-mode-so-all-text-buttons-menus-dropdowns-sheets-popovers-inputs-and-helper-placeholder-text-are-always-clearly-readable-choose-the-theme-direction-autonomously-user-requested-you-pick-but-avoid-low-contrast-transparent-outlined-text-and-avoid-blue-purple-heavy-gradients",
+      "title": "Implement a single, coherent, high-contrast visual theme across the entire app (light mode) so all text, buttons, menus, dropdowns, sheets, popovers, inputs, and helper/placeholder text are always clearly readable. Choose the theme direction autonomously (user requested you pick), but avoid low-contrast/transparent/outlined text and avoid blue/purple-heavy gradients.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-global-css-theme-tokens-in-frontend-src-index-css-the-root-and-dark-css-variables-used-by-tailwind-shadcn-to-match-the-new-high-contrast-theme-and-remove-replace-any-global-utility-styles-that-force-unreadable-colors-e-g-utilities-like-text-on-gradient-that-enforce-white-text-so-they-cannot-cause-invisible-text-on-the-chosen-background-scheme",
+      "title": "Update the global CSS theme tokens in frontend/src/index.css (the :root and .dark CSS variables used by Tailwind/shadcn) to match the new high-contrast theme, and remove/replace any global utility styles that force unreadable colors (e.g., utilities like .text-on-gradient that enforce white text) so they cannot cause invisible text on the chosen background scheme.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refactor-the-landing-page-frontend-src-pages-landingpage-tsx-to-match-the-new-theme-by-removing-the-current-blue-to-purple-gradient-hero-background-and-ensuring-the-hero-paragraph-and-all-other-landing-text-render-in-high-contrast-colors-solid-readable-text-across-the-entire-page",
+      "title": "Refactor the Landing page (frontend/src/pages/LandingPage.tsx) to match the new theme by removing the current blue-to-purple gradient hero background and ensuring the hero paragraph and all other landing text render in high-contrast colors (solid, readable text) across the entire page.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-and-fix-readability-in-navigation-and-overlay-ui-including-the-header-navigation-buttons-and-the-mobile-sheet-menu-frontend-src-components-header-tsx-ensuring-all-labels-icons-remain-readable-in-all-states-default-hover-active-disabled-and-inside-overlays-sheetcontent",
+      "title": "Audit and fix readability in navigation and overlay UI, including the header navigation buttons and the mobile sheet menu (frontend/src/components/Header.tsx), ensuring all labels/icons remain readable in all states (default/hover/active/disabled) and inside overlays (SheetContent).",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-every-page-and-common-interactive-pattern-in-the-app-uses-the-new-readable-theme-without-regressions-including-home-devotion-journal-bible-search-results-list-items-fasting-my-journey-ministry-and-settings-fix-any-remaining-instances-of-low-contrast-text-including-muted-placeholder-text-badges-tab-labels-and-any-dropdown-select-content-by-updating-class-usage-to-rely-on-theme-tokens-text-foreground-text-muted-foreground-bg-card-bg-popover-etc-rather-than-hard-coded-white-transparent-styles",
+      "title": "Ensure every page and common interactive pattern in the app uses the new readable theme without regressions, including: Home, Devotion, Journal, Bible (search/results/list items), Fasting, My Journey, Ministry, and Settings. Fix any remaining instances of low-contrast text (including muted/placeholder text, badges, tab labels, and any dropdown/select content) by updating class usage to rely on theme tokens (text-foreground, text-muted-foreground, bg-card, bg-popover, etc.) rather than hard-coded white/transparent styles.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Implement a global, high-contrast theme (new color scheme) so all text/menus/dropdowns/buttons are always readable; remove transparent/outlined/low-contrast text and enforce accessibility contrast across the app",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add per-user accounts/profiles so different users have private devotional progress, journals, bookmarks, and journey inputs visible only to them",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Add/maintain an informative landing/home page explaining what the app is for and how it works, with clear CTAs and links (Amazon book + church website)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Ensure the 30-day devotional is locked to the provided scripture sequence and displays sections in the required order including Action, Guidance, and Reflection prompt for every day",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Provide full KJV Bible access in-app (books → chapters → verses) with search by book/chapter/verse/keyword, plus bookmarking and linking verses to journal entries",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Add/keep an external Bible access link to https://m.kingjamesbibleonline.org/ as a fallback/quick access option from the Bible section",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Add/keep a dedicated Fasting tab with goal tracking, hourly encouragement messages, reflection prompt/input, and completion encouragement",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "architectural_notes": [
+    "Frontend is a single-page React app with internal page-state navigation (no router shown), using shadcn/ui components + Tailwind (OKLCH design tokens) for consistent styling.",
+    "TanStack React Query is used as the data layer (queries/mutations + cache invalidation) and an actor is recreated when the Internet Identity principal changes.",
+    "Internet Identity auth is wrapped in a React context provider (AuthClient), persisting delegation across reloads and exposing login/logout status flags.",
+    "Backend is a Motoko canister with per-user data stored in an in-memory Map<Principal, UserData> (journal entries, current day, bookmarks, fasting sessions, reminders).",
+    "Authorization is implemented as a mixin (MixinAuthorization) backed by an AccessControl module with roles (#admin/#user/#guest) and admin-only initialization/role assignment.",
+    "Admin bootstrap uses an environment variable token (CAFFEINE_ADMIN_TOKEN) combined with a user-provided secret passed from the frontend via URL hash parameter.",
+    "Bible/devotional content initialization is admin-only and stored in canister memory via list-like collections; client reads via query calls.",
+    "A separate blob-storage mixin exists for “Caffeine” storage management (gateway principal allowlist, dead-blob pruning, cashier cycle refill), though it is not wired into the main devotional actor in the provided files.",
+    "Mobile-first PWA direction (installable on iOS/Android) with calm, distraction-free UI.",
+    "Introduce a centralized theme system/design tokens with enforced accessible contrast for all text, controls, menus, and dropdowns (avoid transparent/outlined text that reduces readability)."
+  ],
+  "known_issues": [
+    "Profile setup modal collects a user name, but the backend does not persist profile data; useGetCallerUserProfile returns a hardcoded {name:\"User\"} for non-guest roles, so personalization is not actually stored.",
+    "HomePage calls initializeDevotionalDays() on mount for every authenticated user; backend restricts this to admins and will trap for normal users (likely causing errors/noise in logs/UI).",
+    "Fasting progress likely never advances: backend only updates elapsed time in updateFastingProgress(), but getFastingProgress() does not compute elapsed and the frontend never calls updateFastingProgress().",
+    "Frontend is wrapped in QueryClientProvider twice (in main.tsx and again in App.tsx), creating two QueryClient instances and potentially confusing cache/invalidation behavior.",
+    "Backend state (devotionalDays, bibleVerses, userDataMap, accessControl roles) is not marked stable in the shown code and will be lost on canister upgrade unless handled elsewhere.",
+    "Settings page claims journals are stored locally for privacy/offline access, but journal entries are actually stored in the backend per Principal (as implemented).",
+    "Browser notification “daily reminders” are only stored in localStorage and there is no scheduling/service-worker logic to trigger notifications at the chosen time; sendTestNotification is the only implemented notification action.",
+    "Bible search is simple substring matching and appears case-sensitive; it does not robustly parse references despite UI hinting at reference searches.",
+    "UI readability/contrast problems persist: white/transparent/outlined text on light backgrounds makes text/buttons/menus/dropdowns hard or impossible to read; needs a global theme/contrast fix.",
+    "KJV Bible content is incomplete in-app (shows only book list without full chapter/verse text)."
+  ],
+  "isFixRequest": true,
+  "gameProjectType": "none",
+  "projectName": "Faith Unplugged – Companion App",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

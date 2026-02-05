@@ -1,0 +1,52 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-05T01:04:27.836Z",
+  "summary": "Global theme tokens in index.css were updated to a high-contrast OKLCH palette, and multiple pages/components were adjusted to use theme tokens (bg-card/text-foreground/etc.) with stronger borders/shadows. However, the Landing page still uses a gradient background, and some non-theming functionality changes (voice input via SpeechRecognition, plus auth-hook changes) appear to have been introduced despite the request limiting scope to theming/readability.",
+  "missing_requirements": [
+    {
+      "id": "REQ-3",
+      "requirement": "Refactor the Landing page to remove the current blue-to-purple gradient hero background and ensure the hero paragraph and all landing text render in high-contrast colors (solid, readable text) across the entire page.",
+      "reason": "The Landing page root container still uses a gradient background (even if it’s now based on theme tokens rather than blue/purple). This does not clearly satisfy the requirement to remove the gradient hero background.",
+      "evidence": [
+        "frontend/src/pages/LandingPage.tsx (uses `bg-gradient-to-br from-background via-muted/30 to-secondary/20`)"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Added/expanded voice-to-text (SpeechRecognition) interactions on Devotion and Fasting pages (toggle voice input, start/stop toasts, etc.).",
+      "reason": "The BuildRequest explicitly states no new product features beyond theming/readability changes; speech recognition/voice input is feature functionality, not just styling.",
+      "evidence": [
+        "frontend/src/pages/DevotionPage.tsx (SpeechRecognition/webkitSpeechRecognition setup, toggleVoiceInput, toasts)",
+        "frontend/src/pages/FastingPage.tsx (SpeechRecognition/webkitSpeechRecognition setup, toggleVoiceInput, toasts)"
+      ]
+    },
+    {
+      "description": "Auth-related behavior changes/refactors in the Internet Identity hook beyond UI readability.",
+      "reason": "The request explicitly lists as a non-goal: do not change authentication behavior; the diff shows substantial modifications to the auth hook implementation details (cannot be confirmed as purely cosmetic).",
+      "evidence": [
+        "frontend/src/hooks/useInternetIdentity.ts (modified; large functional/auth-client logic changes shown in diff excerpt)"
+      ]
+    },
+    {
+      "description": "Added project_state.json documenting broad product/feature scope (PWA, reminders, donations, etc.).",
+      "reason": "Not requested as part of theming/readability work; appears as ancillary documentation/state tracking.",
+      "evidence": [
+        "project_state.json (added)"
+      ]
+    }
+  ],
+  "confidence": 0.64,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/Header.tsx",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/index.css",
+    "frontend/src/pages/DevotionPage.tsx",
+    "frontend/src/pages/FastingPage.tsx",
+    "frontend/src/pages/LandingPage.tsx",
+    "frontend/src/pages/MyJourneyPage.tsx",
+    "project_state.json"
+  ]
+}
